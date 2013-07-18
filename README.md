@@ -1,0 +1,4 @@
+eHyperLogLog
+============
+
+Erlang HyperLogLog
