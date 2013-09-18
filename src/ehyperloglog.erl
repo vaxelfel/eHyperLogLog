@@ -55,8 +55,8 @@ update(V, B, R) ->
     
 -spec merge(hll(), hll()) -> hll().
 merge(Hll1, Hll2) ->
-    F = fun({R1, R2, Idx}, Acc) -> Acc#hll{registers = reg_set(Acc#hll.registers, Idx, erlang:max(R1,R2))} end,
-    bitmap:foldl2(F,  new(Hll1#hll.b), {Hll1#hll.registers, Hll2#hll.registers}).    
+    R = bitmap:merge((new(Hll1#hll.b))#hll.registers, {Hll1#hll.registers, Hll2#hll.registers}),
+    #hll{b = Hll1#hll.b, registers = R}.    
 
 -spec cardinality(pos_integer(), registers()) -> pos_integer().
 cardinality(M, R) ->
