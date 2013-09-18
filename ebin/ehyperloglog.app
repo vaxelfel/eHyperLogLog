@@ -1,7 +1,0 @@
-{application,ehyperloglog,
-             [{description,"erlang HyperLogLog"},
-              {vsn,"1"},
-              {registered,[]},
-              {applications,[kernel,stdlib]},
-              {env,[]},
-              {modules,[bitmap,ehyperloglog]}]}.
