@@ -1,5 +1,5 @@
 -module(bitmap).
--export([new/0, new/2,set/3,get/2,foldl/3]).
+-export([new/0, new/2,set/3,get/2,foldl/3, merge/2]).
 %% bitmap record accessors
 -export([get_width/1, get_bits/1,
          set_width/2, set_bits/2,
@@ -82,3 +82,20 @@ foldl(_F, Acc, _Wd, <<>>) -> Acc;
 foldl(F, Acc, Wd, Bits) ->
     << X:Wd, Rest/bits >> = Bits,
     foldl(F, F(X, Acc), Wd, Rest).
+
+-spec merge(bitmap(), bitmap()) -> bitmap().
+merge(BM1, BM2)->
+    merge(new(?MODULE:length(BM1), get_width(BM1)), BM1, BM2).
+
+-spec merge(bitmap(), bitmap(), bitmap()) -> bitmap().
+merge(Acc, BM1, BM2) ->
+    F = fun({R1, R2, Idx}, _Acc) -> set(_Acc, Idx, erlang:max(R1,R2) ) end,
+    merge(F, Acc, get_width(BM1), get_bits(BM1), get_width(BM2), get_bits(BM2), 0).
+
+-spec merge(fun(), bitmap(), non_neg_integer(), bitstring(), non_neg_integer(), bitstring(), non_neg_integer()) -> bitmap().
+merge(_F, Acc, _Wd1, <<>>, _Wd2, <<>>, _) -> Acc;
+merge(F, Acc, Wd1, Bits1, Wd2, Bits2, Idx) ->
+    << X1:Wd1, Rest1/bits >> = Bits1,
+    << X2:Wd2, Rest2/bits >> = Bits2,
+    merge(F, F({X1, X2, Idx}, Acc), Wd1, Rest1, Wd2, Rest2, Idx+1).
+    
