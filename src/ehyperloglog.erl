@@ -55,7 +55,6 @@ update(V, B, R) ->
     
 -spec merge(hll(), hll()) -> hll().
 merge(Hll1, Hll2) ->
-    %%R = bitmap:merge((new(Hll1#hll.b))#hll.registers, {Hll1#hll.registers, Hll2#hll.registers}),
     R = bitmap:merge(Hll1#hll.registers, Hll2#hll.registers),
     #hll{b = Hll1#hll.b, registers = R}.    
 
